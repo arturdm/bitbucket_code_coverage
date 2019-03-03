@@ -1,0 +1,18 @@
+name: bitbucket_code_coverage
+version: 0.0.1
+homepage: tbd
+author: Artur Stepniewski <artur.stepniewski+github@gmail.com>
+
+dependencies:
+  args: ^1.4.1
+  collection: ^1.14.11
+  json_annotation: &json_version ^2.0.0
+  lcov: ^5.1.0
+  logging: ^0.11.3+2
+
+dev_dependencies:
+  build_runner: ^1.0.0
+  json_serializable: *json_version
+  mock_web_server: ^4.0.0
+  test: ^1.5.3
+  test_descriptor: ^1.0.0

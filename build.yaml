@@ -1,0 +1,11 @@
+# Read about `build.yaml` at https://pub.dartlang.org/packages/build_config
+# To update generated code, run `pub run build_runner build`
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          any_map: true
+          checked: true
+          create_to_json: true
+          field_rename: snake
