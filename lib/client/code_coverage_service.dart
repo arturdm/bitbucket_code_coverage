@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bitbucket_code_coverage/client/model/commit_coverage.dart';

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bitbucket_code_coverage/client/coverage_converter/coverage_converter.dart';
