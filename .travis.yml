@@ -3,7 +3,23 @@ sudo: false
 dart:
 - stable
 - dev
-with_content_shell: false
-dart_task:
-- test: --platform vm
-- dartanalyzer: --fatal-warnings lib
+
+cache:
+  directories:
+  - $HOME/.pub-cache
+  - .dart_tool/build
+
+stages:
+- analyze
+- test
+- coverage
+
+jobs:
+  include:
+  - stage: analyze
+    script: dartanalyzer --fatal-warnings .
+  - stage: unit_test
+    script: pub run test_coverage
+  - stage: coverage
+    script:
+    - bash <(curl -s https://codecov.io/bash)

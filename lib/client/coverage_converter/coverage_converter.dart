@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bitbucket_code_coverage/client/model/commit_coverage.dart';

@@ -1,6 +1,6 @@
 import 'package:bitbucket_code_coverage/bitbucket_code_coverage_command_runner.dart';
 import 'package:mock_web_server/mock_web_server.dart';
-import 'package:test_api/test_api.dart';
+import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
 import 'package:test_descriptor/test_descriptor.dart';
 
@@ -28,12 +28,12 @@ end_of_record
   {"path":"lib/second.dart","coverage":"C:11,19;P:;U:14"}
 ]""";
 
-  setUp(() async {
-    await mockWebServer.start();
+  setUp(()  {
+     mockWebServer.start();
   });
 
-  tearDown(() async {
-    await mockWebServer.shutdown();
+  tearDown(()  {
+     mockWebServer.shutdown();
   });
 
   test("should post lcov coverage data to server using token", () async {
