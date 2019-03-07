@@ -8,13 +8,14 @@ part of 'commit_coverage.dart';
 
 CommitCoverage _$CommitCoverageFromJson(Map json) {
   return $checkedNew('CommitCoverage', json, () {
-    final val = CommitCoverage();
-    $checkedConvert(
+    final val = CommitCoverage($checkedConvert(
         json,
         'files',
-        (v) => val.files = (v as List)
-            ?.map((e) => e == null ? null : FileCoverage.fromJson(e as Map))
-            ?.toList());
+        (v) => (v as List)
+            ?.map((e) => e == null
+                ? null
+                : FileCoverage.fromJson(e as Map<String, dynamic>))
+            ?.toList()));
     return val;
   });
 }

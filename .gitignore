@@ -25,3 +25,5 @@ res/
 .idea/
 **/.test_coverage.dart
 coverage/
+android/
+ios/

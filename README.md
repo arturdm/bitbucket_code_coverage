@@ -25,7 +25,7 @@ pub run bitbucket_code_coverage \
   -p PASSWORD \
   post \
   -c COMMIT_ID \
-  -f LCOV_FILE
+  -f LCOV_FILE \
+  -d WORKING_DIRECTORY \
+  --file-pattern **/lcov.info
 ```
-
-Note that token takes precedence over username and password.

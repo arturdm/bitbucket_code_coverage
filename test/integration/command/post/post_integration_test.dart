@@ -4,96 +4,124 @@ import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
 import 'package:test_descriptor/test_descriptor.dart';
 
+import 'lcov_factory.dart' as lcov_factory;
+
+String commitId = "deadbaca";
+
 void main() {
+  List<String> commonParameters;
   MockWebServer mockWebServer = MockWebServer();
-  String lcovContent = """
-SF:lib/first.dart
-DA:6,0
-DA:7,0
-DA:8,0
-DA:9,0
-LF:101
-LH:0
-end_of_record
-SF:lib/second.dart
-DA:11,1
-DA:19,1
-LF:2
-LH:2
-end_of_record
-""";
-  String expectedRequestBody = """{"files":[{"path":"lib/first.dart","coverage":"C:;P:;U:6,7,8,9"},{"path":"lib/second.dart","coverage":"C:11,19;P:;U:"}]}""";
-  String expectedResponseBody = """[
-  {"path":"lib/first.dart","coverage":"C:6,7,8,9;P:;U:14"},
-  {"path":"lib/second.dart","coverage":"C:11,19;P:;U:14"}
+  String lcovContent = lcov_factory.lcov(["lib/first.dart", "lib/second.dart"]);
+
+  setUp(() async {
+    await mockWebServer.start();
+    commonParameters = ["-v", "--url", "${mockWebServer.url}"];
+  });
+
+  tearDown(() {
+    mockWebServer.shutdown();
+  });
+
+  group("authorization", () {
+    String expectedRequestBody = """{"files":[
+{"path":"lib/first.dart","coverage":"${lcov_factory.expectedCoverage()}"},
+{"path":"lib/second.dart","coverage":"${lcov_factory.expectedCoverage()}"}
+]}"""
+        .replaceAll("\n", "");
+    String expectedResponseBody = """[
+{"path":"lib/first.dart","coverage":"${lcov_factory.expectedCoverage()}"},
+{"path":"lib/second.dart","coverage":"${lcov_factory.expectedCoverage()}"}
 ]""";
 
-  setUp(()  {
-     mockWebServer.start();
+    test("should post lcov coverage data to server using username and password", () async {
+      // given
+      DirectoryDescriptor parent = d.dir("parent", [d.file("lcov.info", lcovContent)]);
+      await parent.create();
+      mockWebServer.enqueue(httpCode: 201, body: expectedResponseBody);
+
+      // when
+      await BitbucketCodeCoverageCommandRunner().run(commonParameters.followedBy([
+        "post",
+        "-u",
+        "username",
+        "-p",
+        "password",
+        "-f",
+        "${parent.io.path}/lcov.info",
+        "-c",
+        commitId
+      ]));
+
+      // then
+      StoredRequest request = mockWebServer.takeRequest();
+      expectProperPostRequest(request);
+      expect(request.headers, containsPair("authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ="));
+      expect(request.body, equals(expectedRequestBody));
+    });
+
+    test("should post lcov coverage data to server using token", () async {
+      // given
+      FileDescriptor lcovFile = d.file("lcov.info", lcovContent);
+      await lcovFile.create();
+      String token = "token";
+      mockWebServer.enqueue(httpCode: 201, body: expectedResponseBody);
+
+      // when
+      await BitbucketCodeCoverageCommandRunner().run(commonParameters
+          .followedBy(["-t", token, "post", "-f", lcovFile.io.path, "-c", commitId]));
+
+      // then
+      StoredRequest request = mockWebServer.takeRequest();
+      expectProperPostRequest(request);
+      expect(request.headers, containsPair("authorization", "Bearer $token"));
+      expect(request.body, equals(expectedRequestBody));
+    });
   });
 
-  tearDown(()  {
-     mockWebServer.shutdown();
-  });
+  test("should post coverage data from multiple files by pattern", () async {
+    // given
+    DirectoryDescriptor dir = d.dir("project", [
+      d.dir("first", [
+        d.file("lcov.info", "$lcovContent"),
+        d.dir("lib", [d.file("first.dart"), d.file("second.dart")])
+      ]),
+      d.dir("second", [
+        d.file("lcov.info", "$lcovContent"),
+        d.dir("lib", [d.file("first.dart"), d.file("second.dart")])
+      ])
+    ]);
+    await dir.create();
+    String expectedRequestBody = """{"files":[
+{"path":"first/lib/first.dart","coverage":"${lcov_factory.expectedCoverage()}"},
+{"path":"first/lib/second.dart","coverage":"${lcov_factory.expectedCoverage()}"},
+{"path":"second/lib/first.dart","coverage":"${lcov_factory.expectedCoverage()}"},
+{"path":"second/lib/second.dart","coverage":"${lcov_factory.expectedCoverage()}"}
+]}"""
+        .replaceAll("\n", "");
+    mockWebServer.enqueue(httpCode: 201, body: "[]");
 
-  test("should post lcov coverage data to server using token", () async {
-    String token = "token";
-    String commitId = "deadbaca";
-    FileDescriptor lcovFile = d.file("lcov.info", lcovContent);
-    await lcovFile.create();
-    mockWebServer.enqueue(httpCode: 201, body: expectedResponseBody);
-
-    await BitbucketCodeCoverageCommandRunner().run(<String>[
-      "-v",
-      "--url",
-      "${mockWebServer.url}",
+    // when
+    await BitbucketCodeCoverageCommandRunner().run(commonParameters.followedBy([
       "-t",
-      token,
-      "-u",
-      "username but token takes precedence",
-      "-p",
-      "password but token takes precedence",
+      "token",
       "post",
-      "-f",
-      lcovFile.io.path,
+      "-d",
+      dir.io.path,
+      "--file-pattern",
+      "**/lcov.info",
       "-c",
       commitId
-    ]);
+    ]));
 
+    // then
     StoredRequest request = mockWebServer.takeRequest();
-    expect(request.method, equals("POST"));
-    expect(request.uri.path, equals("/rest/code-coverage/1.0/commits/$commitId"));
-    expect(request.headers, containsPair("authorization", "Bearer $token"));
-    expect(request.headers, containsPair("content-type", "application/json; charset=utf-8"));
+    expectProperPostRequest(request);
     expect(request.body, equals(expectedRequestBody));
   });
+}
 
-  test("should post lcov coverage data to server using username and password", () async {
-    String commitId = "deadbaca";
-    FileDescriptor lcovFile = d.file("lcov.info", lcovContent);
-    await lcovFile.create();
-    mockWebServer.enqueue(httpCode: 201, body: expectedResponseBody);
-
-    await BitbucketCodeCoverageCommandRunner().run(<String>[
-      "-v",
-      "--url",
-      "${mockWebServer.url}",
-      "-u",
-      "username",
-      "-p",
-      "password",
-      "post",
-      "-f",
-      lcovFile.io.path,
-      "-c",
-      commitId
-    ]);
-
-    StoredRequest request = mockWebServer.takeRequest();
-    expect(request.method, equals("POST"));
-    expect(request.uri.path, equals("/rest/code-coverage/1.0/commits/$commitId"));
-    expect(request.headers, containsPair("authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ="));
-    expect(request.headers, containsPair("content-type", "application/json; charset=utf-8"));
-    expect(request.body, equals(expectedRequestBody));
-  });
+void expectProperPostRequest(StoredRequest request) {
+  expect(request.method, equals("POST"));
+  expect(request.uri.path, equals("/rest/code-coverage/1.0/commits/$commitId"));
+  expect(request.headers, containsPair("content-type", "application/json; charset=utf-8"));
 }
