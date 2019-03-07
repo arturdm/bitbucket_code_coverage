@@ -10,8 +10,8 @@ cache:
   - .dart_tool/build
 
 stages:
-- analyze
-- test
+- name: analyze
+- name: test
 
 jobs:
   include:
@@ -21,4 +21,5 @@ jobs:
   - stage: test
     script:
     - pub run test_coverage
+    after_success:
     - bash <(curl -s https://codecov.io/bash)

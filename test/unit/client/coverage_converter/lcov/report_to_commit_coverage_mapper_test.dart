@@ -5,7 +5,7 @@ import 'package:lcov/lcov.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test("should map Report to CommitCoverage", () {
+  test("should map Report to CommitCoverage", () async {
     // given
     ReportToCommitCoverageMapper converter = ReportToCommitCoverageMapper();
     Report report = Report.fromCoverage("""
@@ -28,7 +28,7 @@ end_of_record
     """);
 
     // when
-    CommitCoverage commitCoverage = converter.convert(report);
+    CommitCoverage commitCoverage = await converter.convert(report, "root", "root/lcov.info");
 
     // then
     expect(commitCoverage.files, hasLength(2));

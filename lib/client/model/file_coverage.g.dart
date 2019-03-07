@@ -8,14 +8,14 @@ part of 'file_coverage.dart';
 
 FileCoverage _$FileCoverageFromJson(Map json) {
   return $checkedNew('FileCoverage', json, () {
-    final val = FileCoverage();
-    $checkedConvert(json, 'path', (v) => val.path = v as String);
-    $checkedConvert(
-        json,
-        'coverage',
-        (v) => val.coverage = v == null
-            ? null
-            : const CoverageStringConverter().fromJson(v as String));
+    final val = FileCoverage(
+        $checkedConvert(json, 'path', (v) => v as String),
+        $checkedConvert(
+            json,
+            'coverage',
+            (v) => v == null
+                ? null
+                : const CoverageStringConverter().fromJson(v as String)));
     return val;
   });
 }
