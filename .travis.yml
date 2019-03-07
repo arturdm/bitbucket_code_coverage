@@ -9,17 +9,9 @@ cache:
   - $HOME/.pub-cache
   - .dart_tool/build
 
-stages:
-- name: analyze
-- name: test
+script:
+- dartanalyzer --fatal-warnings .
+- pub run test_coverage
 
-jobs:
-  include:
-  - stage: analyze
-    script:
-    - dartanalyzer --fatal-warnings .
-  - stage: test
-    script:
-    - pub run test_coverage
-    after_success:
-    - bash <(curl -s https://codecov.io/bash)
+after_success:
+- bash <(curl -s https://codecov.io/bash)

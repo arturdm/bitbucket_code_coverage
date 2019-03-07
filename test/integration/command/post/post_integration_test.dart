@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bitbucket_code_coverage/bitbucket_code_coverage_command_runner.dart';
 import 'package:mock_web_server/mock_web_server.dart';
 import 'package:test/test.dart';
@@ -23,15 +25,16 @@ void main() {
   });
 
   group("authorization", () {
-    String expectedRequestBody = """{"files":[
-{"path":"lib/first.dart","coverage":"${lcov_factory.expectedCoverage()}"},
-{"path":"lib/second.dart","coverage":"${lcov_factory.expectedCoverage()}"}
-]}"""
-        .replaceAll("\n", "");
-    String expectedResponseBody = """[
-{"path":"lib/first.dart","coverage":"${lcov_factory.expectedCoverage()}"},
-{"path":"lib/second.dart","coverage":"${lcov_factory.expectedCoverage()}"}
-]""";
+    String expectedRequestBody = json.encode({
+      "files": [
+        {"path": "lib/first.dart", "coverage": "${lcov_factory.expectedCoverage()}"},
+        {"path": "lib/second.dart", "coverage": "${lcov_factory.expectedCoverage()}"}
+      ]
+    });
+    String expectedResponseBody = json.encode([
+      {"path": "lib/first.dart", "coverage": "${lcov_factory.expectedCoverage()}"},
+      {"path": "lib/second.dart", "coverage": "${lcov_factory.expectedCoverage()}"}
+    ]);
 
     test("should post lcov coverage data to server using username and password", () async {
       // given
@@ -91,13 +94,14 @@ void main() {
       ])
     ]);
     await dir.create();
-    String expectedRequestBody = """{"files":[
-{"path":"first/lib/first.dart","coverage":"${lcov_factory.expectedCoverage()}"},
-{"path":"first/lib/second.dart","coverage":"${lcov_factory.expectedCoverage()}"},
-{"path":"second/lib/first.dart","coverage":"${lcov_factory.expectedCoverage()}"},
-{"path":"second/lib/second.dart","coverage":"${lcov_factory.expectedCoverage()}"}
-]}"""
-        .replaceAll("\n", "");
+    Map<String, dynamic> expectedRequestBody = {
+      "files": [
+        {"path": "second/lib/first.dart", "coverage": "${lcov_factory.expectedCoverage()}"},
+        {"path": "second/lib/second.dart", "coverage": "${lcov_factory.expectedCoverage()}"},
+        {"path": "first/lib/first.dart", "coverage": "${lcov_factory.expectedCoverage()}"},
+        {"path": "first/lib/second.dart", "coverage": "${lcov_factory.expectedCoverage()}"}
+      ]
+    };
     mockWebServer.enqueue(httpCode: 201, body: "[]");
 
     // when
@@ -116,7 +120,7 @@ void main() {
     // then
     StoredRequest request = mockWebServer.takeRequest();
     expectProperPostRequest(request);
-    expect(request.body, equals(expectedRequestBody));
+    expect(json.decode(request.body)["files"], unorderedEquals(expectedRequestBody["files"]));
   });
 }
 
