@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:bitbucket_code_coverage/client/coverage_converter/lcov/path_prefix_finder.dart';
-import 'package:bitbucket_code_coverage/client/model/commit_coverage.dart';
-import 'package:bitbucket_code_coverage/client/model/coverage_string.dart';
-import 'package:bitbucket_code_coverage/client/model/file_coverage.dart';
+import 'package:bitbucket_code_coverage/src/client/coverage_converter/lcov/path_prefix_finder.dart';
+import 'package:bitbucket_code_coverage/src/client/model/commit_coverage.dart';
+import 'package:bitbucket_code_coverage/src/client/model/coverage_string.dart';
+import 'package:bitbucket_code_coverage/src/client/model/file_coverage.dart';
 import 'package:lcov/lcov.dart';
 
 class ReportToCommitCoverageMapper {

@@ -1,4 +1,4 @@
-import 'package:bitbucket_code_coverage/client/coverage_converter/lcov/path_prefix_finder.dart';
+import 'package:bitbucket_code_coverage/src/client/coverage_converter/lcov/path_prefix_finder.dart';
 import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
 import 'package:test_descriptor/test_descriptor.dart';

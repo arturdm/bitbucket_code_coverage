@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bitbucket_code_coverage/bitbucket_code_coverage_command_runner.dart';
+import 'package:bitbucket_code_coverage/src/bitbucket_code_coverage_command_runner.dart';
 import 'package:mock_web_server/mock_web_server.dart';
 import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;

@@ -2,13 +2,16 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:bitbucket_code_coverage/client/code_coverage_service.dart';
-import 'package:bitbucket_code_coverage/client/coverage_converter/coverage_converter.dart';
-import 'package:bitbucket_code_coverage/client/coverage_converter/lcov_coverage_converter.dart';
-import 'package:bitbucket_code_coverage/client/model/commit_coverage.dart';
-import 'package:bitbucket_code_coverage/command/post/converter_strategy.dart';
+import 'package:bitbucket_code_coverage/bitbucket_code_coverage.dart';
+import 'package:bitbucket_code_coverage/src/client/coverage_converter/coverage_converter.dart';
+import 'package:bitbucket_code_coverage/src/client/coverage_converter/lcov_coverage_converter.dart';
+import 'package:bitbucket_code_coverage/src/client/model/commit_coverage.dart';
+import 'package:bitbucket_code_coverage/src/command/post/converter_strategy.dart';
+import 'package:logging/logging.dart';
 
 class PostCommand extends Command<Null> {
+  final Logger logger = Logger.root;
+
   PostCommand() {
     argParser.addOption("file", abbr: "f", help: "specifies coverage file path");
     argParser.addOption("file-pattern", help: "specifies coverage file pattern");
@@ -50,19 +53,28 @@ class PostCommand extends Command<Null> {
     CoverageConverter coverageConverter = LcovCoverageConverter(currentDirectory);
     ConverterStrategy strategy =
         ConverterStrategy.from(coverageFilePath, coverageFilePattern, workingDirectory);
+    logger.info("Converting code coverage in $currentDirectory");
     CommitCoverage commitCoverage = await strategy.convertWith(coverageConverter);
-    return _post(commitCoverage).then((CommitCoverage commitCoverage) => null);
+
+    return _post(commitCoverage);
   }
 
-  Future<CommitCoverage> _post(CommitCoverage commitCoverage) {
+  Future<Null> _post(CommitCoverage commitCoverage) {
+    logger.info("Publishing coverage data of commit ${commitId} to ${url} ");
     CodeCoverageService codeCoverageService =
         CodeCoverageService.from(url: url, token: token, username: username, password: password);
-    return codeCoverageService.post(commitId, commitCoverage);
+    return codeCoverageService.post(commitId, commitCoverage).then((CommitCoverage commitCoverage) {
+      logger.info("Published coverage data to ${url}");
+    });
   }
 
   void _validateArguments() {
     if (_fileAndFilePatternProvided() || _neitherFileNorFilePatternProvided()) {
       usageException("""Use either "--file" or "--file-pattern".""");
+    }
+
+    if (_noCommitIdProvided()) {
+      usageException("""Use "--commit-id" to specify the commit id.""");
     }
   }
 
@@ -70,4 +82,6 @@ class PostCommand extends Command<Null> {
 
   bool _neitherFileNorFilePatternProvided() =>
       coverageFilePattern == null && coverageFilePath == null;
+
+  bool _noCommitIdProvided() => commitId == null;
 }

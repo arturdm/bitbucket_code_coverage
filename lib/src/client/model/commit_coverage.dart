@@ -1,4 +1,4 @@
-import 'package:bitbucket_code_coverage/client/model/file_coverage.dart';
+import 'package:bitbucket_code_coverage/src/client/model/file_coverage.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
