@@ -12,7 +12,7 @@ class PathPrefixFinder {
     return _parentPathsUntil(lcovDirectory, Directory(root))
         .firstWhere((FileSystemEntity entity) => existsSync(entity, sourceFilePath))
         .then((FileSystemEntity entity) => relative(entity, root))
-        .catchError((Error _) => "");
+        .catchError((dynamic _) => "");
   }
 
   String relative(FileSystemEntity entity, String root) => p.relative(entity.path, from: root);

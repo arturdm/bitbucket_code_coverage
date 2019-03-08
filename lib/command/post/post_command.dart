@@ -61,8 +61,13 @@ class PostCommand extends Command<Null> {
   }
 
   void _validateArguments() {
-    if (coverageFilePattern != null && coverageFilePath != null) {
-      usageException("""Could not run with both "--file" and "--file-pattern" provided.""");
+    if (_fileAndFilePatternProvided() || _neitherFileNorFilePatternProvided()) {
+      usageException("""Use either "--file" or "--file-pattern".""");
     }
   }
+
+  bool _fileAndFilePatternProvided() => coverageFilePattern != null && coverageFilePath != null;
+
+  bool _neitherFileNorFilePatternProvided() =>
+      coverageFilePattern == null && coverageFilePath == null;
 }

@@ -22,8 +22,7 @@ class BitbucketCodeCoverageCommandRunner extends CommandRunner<Null> {
   FutureOr<Null> runCommand(ArgResults topLevelResults) {
     if (topLevelResults["token"] != null &&
         (topLevelResults["username"] != null || topLevelResults["password"] != null)) {
-      usageException(
-          """Could not run with both "--token" and "--username" or "--password" provided.""");
+      usageException("""Use either "--token" or "--username" with "--password".""");
       return null;
     } else {
       return super.runCommand(topLevelResults);
