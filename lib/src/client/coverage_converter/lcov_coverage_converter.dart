@@ -10,9 +10,7 @@ class LcovCoverageConverter implements CoverageConverter {
   final String _workingDirectory;
   final ReportToCommitCoverageMapper _mapper;
 
-  LcovCoverageConverter(this._workingDirectory,
-      [this._mapper = const ReportToCommitCoverageMapper()])
-      : assert(_mapper != null);
+  LcovCoverageConverter(this._workingDirectory) : _mapper = const ReportToCommitCoverageMapper();
 
   @override
   Future<CommitCoverage> convert(File coverageFile) async {
