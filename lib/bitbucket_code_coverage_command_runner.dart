@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:bitbucket_code_coverage/command/post/post_command.dart';
+import 'package:logging/logging.dart';
 
 class BitbucketCodeCoverageCommandRunner extends CommandRunner<Null> {
+  final Logger logger = Logger.root;
+
   BitbucketCodeCoverageCommandRunner()
       : super("bitbucket_code_coverage",
             "Converts and publishes coverage data to BitBucket server.") {
@@ -20,12 +23,38 @@ class BitbucketCodeCoverageCommandRunner extends CommandRunner<Null> {
 
   @override
   FutureOr<Null> runCommand(ArgResults topLevelResults) {
-    if (topLevelResults["token"] != null &&
-        (topLevelResults["username"] != null || topLevelResults["password"] != null)) {
-      usageException("""Use either "--token" or "--username" with "--password".""");
-      return null;
-    } else {
+    _configureLogger(topLevelResults);
+    if (_argumentsAreValid(topLevelResults)) {
       return super.runCommand(topLevelResults);
+    } else {
+      return null;
     }
   }
+
+  void _configureLogger(ArgResults topLevelResults) {
+    bool verbose = topLevelResults["verbose"] as bool;
+    logger.level = verbose ? Level.ALL : Level.WARNING;
+  }
+
+  bool _argumentsAreValid(ArgResults results) {
+    if (results.command == null) return true;
+
+    if (results["url"] == null) {
+      usageException("""Use "--url" to point to your Bitbucket server.""");
+      return false;
+    }
+
+    if (_tokenAndUsernameOrPasswordProvided(results) || _neitherTokenNorPasswordProvided(results)) {
+      usageException("""Use either "--token" or "--username" with "--password".""");
+      return false;
+    }
+
+    return true;
+  }
+
+  bool _tokenAndUsernameOrPasswordProvided(ArgResults results) =>
+      results["token"] != null && (results["username"] != null || results["password"] != null);
+
+  bool _neitherTokenNorPasswordProvided(ArgResults results) =>
+      results["token"] == null && (results["username"] == null || results["password"] == null);
 }
