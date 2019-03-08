@@ -94,8 +94,8 @@ void main() {
       ])
     ]);
     await dir.create();
-    Map<String, dynamic> expectedRequestBody = {
-      "files": [
+    Map<String, Iterable<dynamic>> expectedRequestBody = {
+      "files": <Map<String, String>>[
         {"path": "second/lib/first.dart", "coverage": "${lcov_factory.expectedCoverage()}"},
         {"path": "second/lib/second.dart", "coverage": "${lcov_factory.expectedCoverage()}"},
         {"path": "first/lib/first.dart", "coverage": "${lcov_factory.expectedCoverage()}"},
