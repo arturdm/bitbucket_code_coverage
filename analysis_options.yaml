@@ -1,7 +1,7 @@
 analyzer:
   strong-mode:
     implicit-casts: false
-    implicit-dynamic: false
+    implicit-dynamic: true # https://github.com/dart-lang/sdk/issues/25551
   exclude:
   - "**/*.g.dart"
 

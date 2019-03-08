@@ -8,4 +8,3 @@ targets:
           any_map: true
           checked: true
           create_to_json: true
-          field_rename: snake
