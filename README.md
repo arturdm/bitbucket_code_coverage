@@ -13,7 +13,7 @@ Add `bitbucket_code_coverage` to `dev_dependencies`.
 
 ```yaml
 dev_dependencies:
-  bitbucket_code_coverage: ^0.0.1
+  bitbucket_code_coverage: ^0.0.2
 ```
 
 Run the executable for a single coverage file.
