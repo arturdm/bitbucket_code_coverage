@@ -1,5 +1,5 @@
 import 'package:args/command_runner.dart';
-import 'package:bitbucket_code_coverage/bitbucket_code_coverage_command_runner.dart';
+import 'package:bitbucket_code_coverage/src/bitbucket_code_coverage_command_runner.dart';
 import 'package:test/test.dart';
 
 void main() {
