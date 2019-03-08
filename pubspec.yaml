@@ -1,5 +1,5 @@
 name: bitbucket_code_coverage
-version: 0.0.1
+version: 0.0.2
 description: >
   Converts coverage data from LCOV and publishes to Bitbucket server via
   Bitbucket Server Code Coverage plugin API.

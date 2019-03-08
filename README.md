@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/arturdm/bitbucket_code_coverage.svg?branch=master)](https://travis-ci.org/arturdm/bitbucket_code_coverage)
 [![codecov](https://codecov.io/gh/arturdm/bitbucket_code_coverage/branch/master/graph/badge.svg)](https://codecov.io/gh/arturdm/bitbucket_code_coverage)
+[![Pub](https://img.shields.io/pub/v/bitbucket_code_coverage.svg)](https://pub.dartlang.org/packages/bitbucket_code_coverage)
 
 Converts coverage data from LCOV and publishes to Bitbucket server with
 [Bitbucket Server Code Coverage Plugin] installed.
