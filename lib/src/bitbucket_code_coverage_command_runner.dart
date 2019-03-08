@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
@@ -24,7 +25,7 @@ class BitbucketCodeCoverageCommandRunner extends CommandRunner<Null> {
 
   @override
   FutureOr<Null> runCommand(ArgResults topLevelResults) {
-    _configureLogger(topLevelResults);
+    _configureLogger(topLevelResults["verbose"] as bool);
     if (_argumentsAreValid(topLevelResults)) {
       return super.runCommand(topLevelResults);
     } else {
@@ -32,9 +33,15 @@ class BitbucketCodeCoverageCommandRunner extends CommandRunner<Null> {
     }
   }
 
-  void _configureLogger(ArgResults topLevelResults) {
-    bool verbose = topLevelResults["verbose"] as bool;
-    logger.level = verbose ? Level.ALL : Level.WARNING;
+  void _configureLogger(bool verbose) {
+    Logger.root.level = verbose ? Level.ALL : Level.WARNING;
+    Logger.root.onRecord.listen((LogRecord logRecord) {
+      if (logRecord.level >= Level.SEVERE) {
+        stderr.writeln(logRecord);
+      } else {
+        stdout.writeln(logRecord);
+      }
+    });
   }
 
   bool _argumentsAreValid(ArgResults results) {

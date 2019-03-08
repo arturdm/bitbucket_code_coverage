@@ -53,13 +53,14 @@ class PostCommand extends Command<Null> {
     CoverageConverter coverageConverter = LcovCoverageConverter(currentDirectory);
     ConverterStrategy strategy =
         ConverterStrategy.from(coverageFilePath, coverageFilePattern, workingDirectory);
+    logger.info("Converting code coverage in $currentDirectory");
     CommitCoverage commitCoverage = await strategy.convertWith(coverageConverter);
 
     return _post(commitCoverage);
   }
 
   Future<Null> _post(CommitCoverage commitCoverage) {
-    logger.info("Publishing coverage data to ${url} of commit ${commitId}");
+    logger.info("Publishing coverage data of commit ${commitId} to ${url} ");
     CodeCoverageService codeCoverageService =
         CodeCoverageService.from(url: url, token: token, username: username, password: password);
     return codeCoverageService.post(commitId, commitCoverage).then((CommitCoverage commitCoverage) {
