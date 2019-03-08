@@ -21,7 +21,7 @@ dependencies:
   json_annotation: ^2.0.0
   lcov: ^4.1.0
   logging: ^0.11.3+2
-  meta: ^1.1.7
+  meta: ^1.1.6
   path: ^1.6.2
   quiver: ^2.0.1
 
