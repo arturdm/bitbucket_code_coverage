@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/arturdm/bitbucket_code_coverage/branch/master/graph/badge.svg)](https://codecov.io/gh/arturdm/bitbucket_code_coverage)
 
 Converts coverage data from LCOV and publishes to Bitbucket server with
-[plugin](https://bitbucket.org/atlassian/bitbucket-code-coverage) installed.
+[Bitbucket Server Code Coverage Plugin] installed.
 
 ## Usage
 
@@ -15,17 +15,29 @@ dev_dependencies:
   bitbucket_code_coverage: ^0.0.1
 ```
 
-Run the executable.
+Run the executable for a single coverage file.
 
 ```bash
 pub run bitbucket_code_coverage \
   --url http://localhost:7990 \
-  -t TOKEN \
-  -u USERNAME \
-  -p PASSWORD \
+  -u <username> \
+  -p <password> \
   post \
-  -c COMMIT_ID \
-  -f LCOV_FILE \
-  -d WORKING_DIRECTORY \
-  --file-pattern **/lcov.info
+  -c <commit_id> \
+  -f build/lcov.info
 ```
+
+In order to publish data from multiple coverage files use `--file-pattern` option. If you would 
+like to use [Personal Access Token] you can do so by passing it to `-t` option.
+
+```bash
+pub run bitbucket_code_coverage \
+    --url http://localhost:7990 \
+    -t <personal_access_token> \
+    post \
+    -c <commit_id> \
+    --file-pattern **/lcov.info
+```
+
+[Bitbucket Server Code Coverage Plugin]: https://bitbucket.org/atlassian/bitbucket-code-coverage
+[Personal Access Token]: https://confluence.atlassian.com/bitbucketserver/personal-access-tokens-939515499.html

@@ -22,21 +22,25 @@ class PostCommand extends Command<Null> {
   @override
   String get name => "post";
 
-  String get coverageFilePath => argResults["file"];
+  String get coverageFilePath => _fromArgResults("file");
 
-  String get coverageFilePattern => argResults["file-pattern"];
+  String get coverageFilePattern => _fromArgResults("file-pattern");
 
-  String get workingDirectory => argResults["working-directory"];
+  String get workingDirectory => _fromArgResults("working-directory");
 
-  String get commitId => argResults["commit-id"];
+  String get commitId => _fromArgResults("commit-id");
 
-  String get url => globalResults["url"];
+  String get url => _fromGlobalResults("url");
 
-  String get token => globalResults["token"];
+  String get token => _fromGlobalResults("token");
 
-  String get username => globalResults["username"];
+  String get username => _fromGlobalResults("username");
 
-  String get password => globalResults["password"];
+  String get password => _fromGlobalResults("password");
+
+  T _fromArgResults<T>(String name) => argResults[name] as T;
+
+  T _fromGlobalResults<T>(String name) => globalResults[name] as T;
 
   @override
   FutureOr<Null> run() async {

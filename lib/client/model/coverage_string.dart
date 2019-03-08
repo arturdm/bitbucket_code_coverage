@@ -4,11 +4,11 @@ import 'package:meta/meta.dart';
 
 @immutable
 class CoverageString {
-  final List<int> covered;
-  final List<int> partial;
-  final List<int> uncovered;
+  final Iterable<int> covered;
+  final Iterable<int> partial;
+  final Iterable<int> uncovered;
 
-  CoverageString({List<int> covered, List<int> partial, List<int> uncovered})
+  CoverageString({Iterable<int> covered, Iterable<int> partial, Iterable<int> uncovered})
       : this.covered = List<int>.unmodifiable(covered ?? <int>[]),
         this.partial = List<int>.unmodifiable(partial ?? <int>[]),
         this.uncovered = List<int>.unmodifiable(uncovered ?? <int>[]);
@@ -20,13 +20,13 @@ class CoverageString {
 
   @override
   bool operator ==(Object other) {
-    Function equal = const ListEquality<int>().equals;
+    const IterableEquality<int> equality = IterableEquality<int>();
     return identical(this, other) ||
         other is CoverageString &&
             runtimeType == other.runtimeType &&
-            equal(covered, other.covered) &&
-            equal(partial, other.partial) &&
-            equal(uncovered, other.uncovered);
+            equality.equals(covered, other.covered) &&
+            equality.equals(partial, other.partial) &&
+            equality.equals(uncovered, other.uncovered);
   }
 
   @override
@@ -34,9 +34,8 @@ class CoverageString {
 
   factory CoverageString.fromString(String coverage) {
     List<String> split = coverage.split(";");
-    Map<String, List<int>> lineMap = split
-        .asMap()
-        .map((_, String value) => MapEntry<String, List<int>>(_type(value), _lineNumbers(value)));
+    Map<String, Iterable<int>> lineMap = split.asMap().map(
+        (_, String value) => MapEntry<String, Iterable<int>>(_type(value), _lineNumbers(value)));
 
     return CoverageString(covered: lineMap["C"], partial: lineMap["P"], uncovered: lineMap["U"]);
   }
