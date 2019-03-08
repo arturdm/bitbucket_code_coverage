@@ -21,20 +21,30 @@ void main() {
         throwsA(TypeMatcher<UsageException>().having(
             (UsageException usageException) => usageException.message,
             "message",
-            contains(
-                """Could not run with both "--token" and "--username" or "--password" provided."""))));
+            contains("""Use either "--token" or "--username" with "--password"."""))));
   });
 
-  test("should fail if ran with both file and pattern", () {
-    // given
-    Iterable<String> arguments = ["post", "--file-pattern", "**/lcov.info", "-f", "lcov.info"];
-
-    // expect
-    expect(
-        () => BitbucketCodeCoverageCommandRunner().run(arguments),
-        throwsA(TypeMatcher<UsageException>().having(
-            (UsageException usageException) => usageException.message,
-            "message",
-            contains("""Could not run with both "--file" and "--file-pattern" provided."""))));
+  List.of([
+    Row(arguments: ["post"], description: "with neither file nor pattern"),
+    Row(
+        arguments: ["post", "--file-pattern", "**/lcov.info", "-f", "lcov.info"],
+        description: "with both file and pattern")
+  ]).forEach((Row row) {
+    test("should fail if ran ${row.description}", () {
+      // expect
+      expect(
+          () => BitbucketCodeCoverageCommandRunner().run(row.arguments),
+          throwsA(TypeMatcher<UsageException>().having(
+              (UsageException usageException) => usageException.message,
+              "message",
+              contains("""Use either "--file" or "--file-pattern"."""))));
+    });
   });
+}
+
+class Row {
+  final Iterable<String> arguments;
+  final String description;
+
+  const Row({this.arguments, this.description});
 }
