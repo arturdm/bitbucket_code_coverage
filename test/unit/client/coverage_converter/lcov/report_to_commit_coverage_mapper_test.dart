@@ -1,6 +1,6 @@
-import 'package:bitbucket_code_coverage/client/coverage_converter/lcov/report_to_commit_coverage_mapper.dart';
-import 'package:bitbucket_code_coverage/client/model/commit_coverage.dart';
-import 'package:bitbucket_code_coverage/client/model/coverage_string.dart';
+import 'package:bitbucket_code_coverage/src/client/coverage_converter/lcov/report_to_commit_coverage_mapper.dart';
+import 'package:bitbucket_code_coverage/src/client/model/commit_coverage.dart';
+import 'package:bitbucket_code_coverage/src/client/model/coverage_string.dart';
 import 'package:lcov/lcov.dart';
 import 'package:test/test.dart';
 

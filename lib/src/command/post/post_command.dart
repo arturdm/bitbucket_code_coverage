@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:bitbucket_code_coverage/client/code_coverage_service.dart';
-import 'package:bitbucket_code_coverage/client/coverage_converter/coverage_converter.dart';
-import 'package:bitbucket_code_coverage/client/coverage_converter/lcov_coverage_converter.dart';
-import 'package:bitbucket_code_coverage/client/model/commit_coverage.dart';
-import 'package:bitbucket_code_coverage/command/post/converter_strategy.dart';
+import 'package:bitbucket_code_coverage/bitbucket_code_coverage.dart';
+import 'package:bitbucket_code_coverage/src/client/coverage_converter/coverage_converter.dart';
+import 'package:bitbucket_code_coverage/src/client/coverage_converter/lcov_coverage_converter.dart';
+import 'package:bitbucket_code_coverage/src/client/model/commit_coverage.dart';
+import 'package:bitbucket_code_coverage/src/command/post/converter_strategy.dart';
 import 'package:logging/logging.dart';
 
 class PostCommand extends Command<Null> {

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:bitbucket_code_coverage/client/coverage_converter/coverage_converter.dart';
-import 'package:bitbucket_code_coverage/client/model/commit_coverage.dart';
+import 'package:bitbucket_code_coverage/src/client/coverage_converter/coverage_converter.dart';
+import 'package:bitbucket_code_coverage/src/client/model/commit_coverage.dart';
 import 'package:glob/glob.dart';
 
 abstract class ConverterStrategy {

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:bitbucket_code_coverage/client/model/commit_coverage.dart';
+import 'package:bitbucket_code_coverage/src/client/model/commit_coverage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';

@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
-import 'package:bitbucket_code_coverage/command/post/post_command.dart';
 import 'package:logging/logging.dart';
+
+import 'command/post/post_command.dart';
 
 class BitbucketCodeCoverageCommandRunner extends CommandRunner<Null> {
   final Logger logger = Logger.root;
