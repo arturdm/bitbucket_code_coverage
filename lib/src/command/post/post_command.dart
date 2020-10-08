@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:bitbucket_code_coverage/bitbucket_code_coverage.dart';
+import 'package:bitbucket_code_coverage/src/client/code_coverage_service.dart';
 import 'package:bitbucket_code_coverage/src/client/coverage_converter/coverage_converter.dart';
 import 'package:bitbucket_code_coverage/src/client/coverage_converter/lcov_coverage_converter.dart';
 import 'package:bitbucket_code_coverage/src/client/model/commit_coverage.dart';
