@@ -1,6 +1,6 @@
 # bitbucket_code_coverage
 
-[![Build Status](https://travis-ci.org/arturdm/bitbucket_code_coverage.svg?branch=master)](https://travis-ci.org/arturdm/bitbucket_code_coverage)
+[![Build Status](https://github.com/arturdm/bitbucket_code_coverage/workflows/ci/badge.svg?branch=master)](https://github.com/arturdm/bitbucket_code_coverage/actions)
 [![codecov](https://codecov.io/gh/arturdm/bitbucket_code_coverage/branch/master/graph/badge.svg)](https://codecov.io/gh/arturdm/bitbucket_code_coverage)
 [![Pub](https://img.shields.io/pub/v/bitbucket_code_coverage.svg)](https://pub.dartlang.org/packages/bitbucket_code_coverage)
 
